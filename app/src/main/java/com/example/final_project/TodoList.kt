@@ -6,5 +6,20 @@ import java.sql.Time
 import java.util.Date
 
 @Entity
-class TodoList(@PrimaryKey val id: String, val tags: String, val name : String ,val description : String, val date : Date, val time : Time, val Priority: Int) {
+class TodoList(
+    @PrimaryKey val id: String,
+    val tags: String,
+    val name : String ,
+    val description : String,
+    val date : Date,
+    val time : Time,
+    val priority: Int,
+    val status: Status = Status.INPROCESS
+) {
+}
+
+enum class Status {
+    COMPLETE,
+    INPROCESS,
+    POSTPONED
 }

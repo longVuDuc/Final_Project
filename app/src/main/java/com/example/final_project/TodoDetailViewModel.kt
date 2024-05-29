@@ -46,7 +46,7 @@ class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
     }
     fun setPriority(Priority: Int) {
         _state.update {
-            it.copy(Priority = Priority)
+            it.copy(priority = Priority)
         }
     }
     fun add() {
@@ -58,12 +58,17 @@ class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
                 description = _state.value.description,
                 date = _state.value.date,
                 time = _state.value.time,
-                Priority = _state.value.Priority
+                priority = _state.value.priority,
                 )
             dao.add(st)
         }
         _state.update {
-            it.copy(id = "", tags = "", name = "", description = "", Priority = 0)
+            it.copy(id = "", tags = "", name = "", description = "", priority = 0, status = Status.INPROCESS)
+        }
+    }
+    fun setcomplete(){
+        _state.update {
+            it.copy(status = Status.COMPLETE)
         }
     }
 }

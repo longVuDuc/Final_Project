@@ -12,7 +12,8 @@ data class UiState (
     val description : String = "",
     val date : Date = Date() ,
     val time : Time = Time(System.currentTimeMillis()),
-    val Priority: Int = 0
+    val priority: Int = 1,
+    val status: Status = Status.INPROCESS
 )
 
 data class TodoListUiState (
