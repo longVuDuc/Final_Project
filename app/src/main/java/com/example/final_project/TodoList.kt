@@ -7,7 +7,7 @@ import java.util.Date
 
 @Entity
 class TodoList(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     val tags: String,
     val name : String ,
     val description : String,

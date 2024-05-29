@@ -6,7 +6,7 @@ import java.util.Calendar
 import java.util.Date
 
 data class UiState (
-    val id: String = "",
+    val id: Int = 0,
     val tags: String = "",
     val name : String = "",
     val description : String = "",

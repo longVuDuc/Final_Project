@@ -14,11 +14,6 @@ class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
     private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    fun setId(id: String) {
-        _state.update {
-            it.copy( id = id)
-        }
-    }
     fun setTag(Tag: String) {
         _state.update {
             it.copy(tags = Tag)
@@ -63,7 +58,7 @@ class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
             dao.add(st)
         }
         _state.update {
-            it.copy(id = "", tags = "", name = "", description = "", priority = 0, status = Status.INPROCESS)
+            it.copy( tags = "", name = "", description = "", priority = 0, status = Status.INPROCESS)
         }
     }
     fun setcomplete(){
