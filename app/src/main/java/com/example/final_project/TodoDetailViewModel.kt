@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.sql.Time
-import java.util.Date
+
 
 class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
     private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
@@ -29,12 +28,12 @@ class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
             it.copy(description = description)
         }
     }
-    fun setdate(date: Date) {
+    fun setdate(date: String) {
         _state.update {
             it.copy(date = date)
         }
     }
-    fun settime(time: Time) {
+    fun settime(time: String) {
         _state.update {
             it.copy(time = time)
         }

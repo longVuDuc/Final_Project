@@ -33,12 +33,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.final_project.ui.theme.Final_ProjectTheme
-
+import com.example.final_project.TodoEditScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +105,7 @@ fun HomeScreen(){
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {  }) {
+            FloatingActionButton(onClick = {navController.navigate("ToDoEditScreen")  }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -114,6 +115,7 @@ fun HomeScreen(){
             composable("ProjectScreen") { ProjectScreen(modifier = Modifier.padding(innerPadding).fillMaxSize() ) }
             composable("SearchScreen") { SearchScreen(modifier = Modifier.padding(innerPadding).fillMaxSize() ) }
             composable("SettingScreen") { SettingScreen(modifier = Modifier.padding(innerPadding).fillMaxSize() ) }
+            composable("ToDoEditScreen") { TodoEditScreen()}
         }
     }
 

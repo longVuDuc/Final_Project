@@ -2,7 +2,8 @@ package com.example.final_project
 
 
 import java.sql.Time
-import java.util.Calendar
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Date
 
 data class UiState (
@@ -10,8 +11,8 @@ data class UiState (
     val tags: String = "",
     val name : String = "",
     val description : String = "",
-    val date : Date = Date() ,
-    val time : Time = Time(System.currentTimeMillis()),
+    val date : String = LocalDate.now().toString(),
+    val time : String = LocalDateTime.now().toString(),
     val priority: Int = 1,
     val status: Status = Status.INPROCESS
 )
