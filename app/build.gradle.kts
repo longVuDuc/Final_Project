@@ -36,6 +36,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+
     }
     buildFeatures {
         compose = true
@@ -68,7 +69,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
+    implementation ("androidx.compose.material3:material3:1.0.0-alpha06")
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
