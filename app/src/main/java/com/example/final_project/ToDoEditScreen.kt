@@ -17,6 +17,8 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -49,6 +51,9 @@ fun TodoEditScreen(
     val state by vModel.state.collectAsState()
     val context = LocalContext.current
     var dropdownExpanded by remember { mutableStateOf(false) }
+    var priority by remember {
+        mutableStateOf("")
+    }
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -130,7 +135,89 @@ fun TodoEditScreen(
                 Text("Add")
             }
         }
-
+        ExposedDropdownMenuBox(expanded = dropdownExpanded, onExpandedChange = {dropdownExpanded = it}  ) {
+            TextField(
+                readOnly = true,
+                value = priority,
+                onValueChange = { },
+                label = { Text("Priority") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = dropdownExpanded
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier.menuAnchor()
+            )
+            ExposedDropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
+                DropdownMenuItem(
+                    text = { Text(text = "1") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(1)
+                        priority = "1"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "2") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(2)
+                        priority = "2"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "3") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(3)
+                        priority = "3"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "4") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(4)
+                        priority = "4"
+                    }
+                )
+            }
+            ExposedDropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
+                DropdownMenuItem(
+                    text = { Text(text = "1") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(1)
+                        priority = "1"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "2") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(2)
+                        priority = "2"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "3") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(3)
+                        priority = "3"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "4") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(4)
+                        priority = "4"
+                    }
+                )
+            }
+        }
     }
 }
 
