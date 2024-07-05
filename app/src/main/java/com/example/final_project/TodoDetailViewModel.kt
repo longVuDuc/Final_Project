@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
+class TodoDetailViewModel (private val todoDAO: TodoDAO): ViewModel() {
     private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
@@ -54,7 +54,7 @@ class TodoDetailViewModel (private val dao: TodoDAO): ViewModel() {
                 time = _state.value.time,
                 priority = _state.value.priority,
                 )
-            dao.add(st)
+            todoDAO.add(st)
         }
         _state.update {
             it.copy( tags = "", name = "", description = "", priority = 0, status = Status.INPROCESS)

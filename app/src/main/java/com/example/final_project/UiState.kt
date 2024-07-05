@@ -1,6 +1,7 @@
 package com.example.final_project
 
 
+import android.text.LoginFilter.UsernameFilterGMail
 import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -15,6 +16,13 @@ data class UiState (
     val time : String = LocalDateTime.now().toString(),
     val priority: Int = 1,
     val status: Status = Status.INPROCESS
+)
+data class user (
+    val id: Int = 0,
+    val firstname: String = "",
+    val lastname : String = "",
+    val username : String = "",
+    val password : String = ""
 )
 
 data class TodoListUiState (
