@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -82,9 +83,6 @@ fun TodoEditScreen(
         Spacer(modifier = Modifier.height(16.dp))
         ExposedDropdownMenuBox(expanded = dropdownExpanded,
             onExpandedChange = {dropdownExpanded = it},
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
             ) {
             TextField(
                 readOnly = true,
@@ -218,7 +216,7 @@ fun TodoEditScreen(
                     DatePicker(state = datePickerState)
                 }
             }
-            Spacer(modifier = Modifier.width(20.dp))
+            Spacer(modifier = Modifier.width(30.dp))
             OutlinedButton(onClick = { opentimeDialog.value = true }) {
                 Text(timeResult)
             }
@@ -240,8 +238,6 @@ fun TodoEditScreen(
             ).show()
         }
         }
-
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -260,11 +256,4 @@ fun convertLongToDateString(timeInMillis: Long): String {
     val date = Date(timeInMillis)
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return format.format(date)
-}
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    Final_ProjectTheme {
-        TodoEditScreen()
-    }
 }

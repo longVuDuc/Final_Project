@@ -59,13 +59,6 @@ fun HomeScreen() {
                         }
                     }
                     Spacer(modifier = Modifier.width(32.dp))
-                    IconButton(onClick = {navController.navigate("ProjectScreen")}, modifier = Modifier.size(66.dp)) {
-                        Column() {
-                            Icon(Icons.Default.Create, contentDescription ="" , Modifier.size(32.dp))
-                            Text(text = "Project", color = Color.Black)
-                        }
-                    }
-                    Spacer(modifier = Modifier.width(32.dp))
                     IconButton(onClick = {navController.navigate("SearchScreen")}, modifier = Modifier.size(66.dp)) {
                         Column() {
                             Icon(Icons.Default.Search, contentDescription ="" , Modifier.size(32.dp))
