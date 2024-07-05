@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -19,6 +20,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -30,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,6 +40,8 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.final_project.ui.theme.Final_ProjectTheme
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,54 +65,164 @@ fun TodoEditScreen(
         TextField(
             value = state.name,
             onValueChange = { vModel.setName(it) },
-            label = { Text(text = "Name") }
+            label = { Text(text = "Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
         )
+        Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = state.description,
             onValueChange = { vModel.setdescription(it) },
-            label = { Text(text = "Description") }
+            label = { Text(text = "Description") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { opendateDialog.value = true }) {
-            Text(dateResult)
-        }
-        if (opendateDialog.value) {
-            val datePickerState = rememberDatePickerState()
-            val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
-            DatePickerDialog(
-                onDismissRequest = { opendateDialog.value = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            opendateDialog.value = false
-                            dateResult = datePickerState.selectedDateMillis?.let {
-                                convertLongToDateString(it)
-                            } ?: "No selection"
-                            vModel.setdate(dateResult)
-                        },
-                        enabled = confirmEnabled.value
-                    ) {
-                        Text(text = "Select")
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            opendateDialog.value = false
-                        }
-                    ) {
-                        Text(text = "Cancel")
-                    }
-                }
+        ExposedDropdownMenuBox(expanded = dropdownExpanded,
+            onExpandedChange = {dropdownExpanded = it},
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
             ) {
-                DatePicker(state = datePickerState)
+            TextField(
+                readOnly = true,
+                value = priority,
+                onValueChange = { },
+                label = { Text("Priority") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = dropdownExpanded
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier.menuAnchor()
+            )
+            ExposedDropdownMenu(expanded = dropdownExpanded,
+                onDismissRequest = { dropdownExpanded = false },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+                )
+            {
+                DropdownMenuItem(
+                    text = { Text(text = "1") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(1)
+                        priority = "1"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "2") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(2)
+                        priority = "2"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "3") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(3)
+                        priority = "3"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "4") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(4)
+                        priority = "4"
+                    }
+                )
+            }
+            ExposedDropdownMenu(expanded = dropdownExpanded,
+                onDismissRequest = { dropdownExpanded = false},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = "1") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(1)
+                        priority = "1"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "2") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(2)
+                        priority = "2"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "3") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(3)
+                        priority = "3"
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(text = "4") },
+                    onClick = {
+                        dropdownExpanded = false
+                        vModel.setPriority(4)
+                        priority = "4"
+                    }
+                )
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { opentimeDialog.value = true }) {
-            Text(timeResult)
-        }
-        if (opentimeDialog.value) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.CenterHorizontally)){
+            OutlinedButton(onClick = { opendateDialog.value = true }) {
+                Text(dateResult)
+            }
+            if (opendateDialog.value) {
+                val datePickerState = rememberDatePickerState()
+                val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
+                DatePickerDialog(
+                    onDismissRequest = { opendateDialog.value = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                opendateDialog.value = false
+                                dateResult = datePickerState.selectedDateMillis?.let {
+                                    convertLongToDateString(it)
+                                } ?: "No selection"
+                                vModel.setdate(dateResult)
+                            },
+                            enabled = confirmEnabled.value
+                        ) {
+                            Text(text = "Select")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                opendateDialog.value = false
+                            }
+                        ) {
+                            Text(text = "Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+            Spacer(modifier = Modifier.width(20.dp))
+            OutlinedButton(onClick = { opentimeDialog.value = true }) {
+                Text(timeResult)
+            }
+            if (opentimeDialog.value) {
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
@@ -124,6 +239,9 @@ fun TodoEditScreen(
                 true,
             ).show()
         }
+        }
+
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -135,89 +253,6 @@ fun TodoEditScreen(
                 Text("Add")
             }
         }
-        ExposedDropdownMenuBox(expanded = dropdownExpanded, onExpandedChange = {dropdownExpanded = it}  ) {
-            TextField(
-                readOnly = true,
-                value = priority,
-                onValueChange = { },
-                label = { Text("Priority") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = dropdownExpanded
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.menuAnchor()
-            )
-            ExposedDropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
-                DropdownMenuItem(
-                    text = { Text(text = "1") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(1)
-                        priority = "1"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "2") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(2)
-                        priority = "2"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "3") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(3)
-                        priority = "3"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "4") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(4)
-                        priority = "4"
-                    }
-                )
-            }
-            ExposedDropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
-                DropdownMenuItem(
-                    text = { Text(text = "1") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(1)
-                        priority = "1"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "2") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(2)
-                        priority = "2"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "3") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(3)
-                        priority = "3"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "4") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(4)
-                        priority = "4"
-                    }
-                )
-            }
-        }
     }
 }
 
@@ -225,4 +260,11 @@ fun convertLongToDateString(timeInMillis: Long): String {
     val date = Date(timeInMillis)
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return format.format(date)
+}
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    Final_ProjectTheme {
+        TodoEditScreen()
+    }
 }

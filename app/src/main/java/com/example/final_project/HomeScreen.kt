@@ -1,5 +1,6 @@
 package com.example.final_project
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -49,10 +52,10 @@ fun HomeScreen() {
                     horizontalArrangement = Arrangement.Center,
 
                     ){
-                    IconButton(onClick = {navController.navigate("TodayScreen")}, modifier = Modifier.size(66.dp)) {
+                    IconButton(onClick = {navController.navigate("TodoScreen")}, modifier = Modifier.size(66.dp)) {
                         Column() {
                             Icon(Icons.Default.DateRange, contentDescription ="" , Modifier.size(32.dp))
-                            Text(text = "Today", color = Color.Black)
+                            Text(text = "Todo", color = Color.Black)
                         }
                     }
                     Spacer(modifier = Modifier.width(32.dp))
@@ -85,13 +88,10 @@ fun HomeScreen() {
             }
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "TodayScreen") {
-            composable("TodayScreen") { TodayScreen(modifier = Modifier
+        NavHost(navController = navController, startDestination = "TodoScreen") {
+            composable("TodoScreen") { TodoScreen(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()) }
-            composable("ProjectScreen") { ProjectScreen(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize() ) }
             composable("SearchScreen") { SearchScreen(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize() ) }
@@ -104,14 +104,6 @@ fun HomeScreen() {
 
 }
 
-@Composable
-fun TodayScreen( modifier: Modifier = Modifier) {
-    Text(text = "Today Screen")
-}
-@Composable
-fun ProjectScreen( modifier: Modifier = Modifier) {
-    Text(text = "Project Screen")
-}
 @Composable
 fun SearchScreen( modifier: Modifier = Modifier) {
     Text(text = "Search Screen")

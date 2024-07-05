@@ -30,10 +30,6 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun SignIn(navController: NavHostController, vModel: UserViewModel = viewModel(factory = AppViewModels.Factory)) {
-    var firstname by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var userName by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     val state by vModel.state.collectAsState()
     Column(
     modifier = Modifier.fillMaxSize(),
