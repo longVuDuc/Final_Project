@@ -1,11 +1,11 @@
-package com.example.final_project
+package com.example.final_project.Database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity
-class TodoList(
+@Entity(tableName = "TodoItem")
+class TodoItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val tags: String,
     val name : String ,

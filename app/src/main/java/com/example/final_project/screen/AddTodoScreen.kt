@@ -1,4 +1,4 @@
-package com.example.final_project
+package com.example.final_project.screen
 
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -41,14 +39,23 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.final_project.ui.theme.Final_ProjectTheme
+import androidx.navigation.NavHostController
+import com.example.final_project.AppViewModels
+import com.example.final_project.R
+import com.example.final_project.TodoList.TodoAddViewModel
+import com.example.final_project.TodoList.TodoDetailViewModel
+import com.example.final_project.navigation.NavigationDestination
 
+object AddTodoDestination : NavigationDestination {
+    override val route = "Add_ToDo"
+    override val titleRes = R.string.add_todo_title
+}
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoEditScreen(
-    vModel: TodoDetailViewModel = viewModel(factory = AppViewModels.Factory)
+fun AddTodoScreen(
+    navigateTohome : () -> Unit,
+    vModel: TodoAddViewModel = viewModel(factory = AppViewModels.Factory)
 ) {
     var dateResult by remember { mutableStateOf("Date") }
     val opendateDialog = remember { mutableStateOf(false) }
@@ -83,7 +90,7 @@ fun TodoEditScreen(
         Spacer(modifier = Modifier.height(16.dp))
         ExposedDropdownMenuBox(expanded = dropdownExpanded,
             onExpandedChange = {dropdownExpanded = it},
-            ) {
+        ) {
             TextField(
                 readOnly = true,
                 value = priority,
@@ -102,7 +109,7 @@ fun TodoEditScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                )
+            )
             {
                 DropdownMenuItem(
                     text = { Text(text = "1") },
@@ -221,22 +228,22 @@ fun TodoEditScreen(
                 Text(timeResult)
             }
             if (opentimeDialog.value) {
-            val calendar = Calendar.getInstance()
-            val hour = calendar.get(Calendar.HOUR_OF_DAY)
-            val minute = calendar.get(Calendar.MINUTE)
+                val calendar = Calendar.getInstance()
+                val hour = calendar.get(Calendar.HOUR_OF_DAY)
+                val minute = calendar.get(Calendar.MINUTE)
 
-            TimePickerDialog(
-                context,
-                { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
-                    timeResult = String.format("%02d:%02d", selectedHour, selectedMinute)
-                    opentimeDialog.value = false
-                    vModel.settime(timeResult)
-                },
-                hour,
-                minute,
-                true,
-            ).show()
-        }
+                TimePickerDialog(
+                    context,
+                    { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
+                        timeResult = String.format("%02d:%02d", selectedHour, selectedMinute)
+                        opentimeDialog.value = false
+                        vModel.settime(timeResult)
+                    },
+                    hour,
+                    minute,
+                    true,
+                ).show()
+            }
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -247,6 +254,9 @@ fun TodoEditScreen(
             }
             Button(onClick = { vModel.add() }) {
                 Text("Add")
+            }
+            Button(onClick = { navigateTohome()}) {
+                Text(text = "Back")
             }
         }
     }

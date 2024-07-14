@@ -1,8 +1,9 @@
-package com.example.final_project
+package com.example.final_project.user
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.final_project.Database.User
+import com.example.final_project.Database.UserDAO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

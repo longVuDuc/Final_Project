@@ -1,4 +1,4 @@
-package com.example.final_project
+package com.example.final_project.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -22,9 +22,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.final_project.AppViewModels
+import com.example.final_project.R
+import com.example.final_project.navigation.NavigationDestination
+import com.example.final_project.user.UserViewModel
 
+object LoginDestination : NavigationDestination {
+    override val route = "Login"
+    override val titleRes = R.string.login
+}
 @Composable
-fun loginScreen(navController: NavHostController, vModel: UserViewModel = viewModel(factory = AppViewModels.Factory)) {
+fun loginScreen(navigateTohome : () -> Unit,
+                navigateToSignUp : () -> Unit,
+                vModel: UserViewModel = viewModel(factory = AppViewModels.Factory),
+) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showErrorDialog by remember { mutableStateOf(false) }
@@ -65,7 +76,7 @@ fun loginScreen(navController: NavHostController, vModel: UserViewModel = viewMo
                 password = password,
                 onSuccess = {
                     // Navigate to home screen
-                    navController.navigate("home")
+                    navigateTohome()
                 },
                 onError = {
                     showErrorDialog = true
@@ -76,7 +87,7 @@ fun loginScreen(navController: NavHostController, vModel: UserViewModel = viewMo
         }
         Spacer(modifier = Modifier.height(8.dp))
         ClickableText(text = AnnotatedString("Does not have an account? Sign up here"),
-            onClick = { navController.navigate("sign_up") },
+            onClick = { navigateToSignUp() },
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
             )
     }

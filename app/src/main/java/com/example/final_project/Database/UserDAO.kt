@@ -1,4 +1,4 @@
-package com.example.final_project
+package com.example.final_project.Database
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,5 +10,5 @@ interface UserDAO {
     suspend fun add(user: User)
 
     @Query("SELECT * FROM user WHERE username = :username AND password = :password")
-    fun getUser(username: String, password: String): User?
+    suspend fun getUser(username: String, password: String): User?
 }

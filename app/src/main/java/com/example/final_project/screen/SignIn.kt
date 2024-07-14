@@ -1,4 +1,4 @@
-package com.example.final_project
+package com.example.final_project.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
@@ -27,9 +24,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-
+import com.example.final_project.AppViewModels
+import com.example.final_project.R
+import com.example.final_project.navigation.NavigationDestination
+import com.example.final_project.user.UserViewModel
+object SignUpDestination : NavigationDestination {
+    override val route = "SignUp"
+    override val titleRes = R.string.signup
+}
 @Composable
-fun SignIn(navController: NavHostController, vModel: UserViewModel = viewModel(factory = AppViewModels.Factory)) {
+fun SignIn(navigateToLogIn: () -> Unit,
+    vModel: UserViewModel = viewModel(factory = AppViewModels.Factory)
+) {
     val state by vModel.state.collectAsState()
     Column(
     modifier = Modifier.fillMaxSize(),
@@ -70,7 +76,7 @@ fun SignIn(navController: NavHostController, vModel: UserViewModel = viewModel(f
             Text(text = "Sign Up")
         }
         ClickableText(text = AnnotatedString("Already have an account? Login here"),
-            onClick = { navController.navigate("login") },
+            onClick = { navigateToLogIn() },
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
             )
         }

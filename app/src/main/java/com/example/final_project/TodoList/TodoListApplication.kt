@@ -1,6 +1,9 @@
-package com.example.final_project
+package com.example.final_project.TodoList
 
 import android.app.Application
+import com.example.final_project.Database.AppDatabase
+import com.example.final_project.Database.TodoDAO
+import com.example.final_project.Database.UserDAO
 
 class TodoListApplication: Application (){
     lateinit var tododao: TodoDAO

@@ -1,11 +1,9 @@
-package com.example.final_project
+package com.example.final_project.TodoList
 
-
-import android.text.LoginFilter.UsernameFilterGMail
-import java.sql.Time
+import com.example.final_project.Database.Status
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Date
+
 
 data class UiState (
     val id: Int = 0,
@@ -16,15 +14,4 @@ data class UiState (
     val time : String = LocalDateTime.now().toString(),
     val priority: Int = 1,
     val status: Status = Status.INPROCESS
-)
-data class user (
-    val id: Int = 0,
-    val firstname: String = "",
-    val lastname : String = "",
-    val username : String = "",
-    val password : String = ""
-)
-
-data class TodoListUiState (
-    val list: List<TodoList> = listOf()
 )

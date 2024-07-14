@@ -1,7 +1,10 @@
-package com.example.final_project
+package com.example.final_project.TodoList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.final_project.Database.Status
+import com.example.final_project.Database.TodoDAO
+import com.example.final_project.Database.TodoItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,10 +12,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class TodoDetailViewModel (private val todoDAO: TodoDAO): ViewModel() {
+class TodoAddViewModel (private val todoDAO: TodoDAO): ViewModel() {
     private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
-
     fun setTag(Tag: String) {
         _state.update {
             it.copy(tags = Tag)
@@ -45,7 +47,7 @@ class TodoDetailViewModel (private val todoDAO: TodoDAO): ViewModel() {
     }
     fun add() {
         viewModelScope.launch {
-            val st = TodoList(
+            val st = TodoItem(
                 id = _state.value.id,
                 tags = _state.value.tags,
                 name = _state.value.name,
