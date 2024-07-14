@@ -2,8 +2,10 @@ package com.example.final_project.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.final_project.Database.TodoItem
 import com.example.final_project.Database.User
 import com.example.final_project.Database.UserDAO
+import com.example.final_project.TodoList.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,6 +64,17 @@ class UserViewModel(private val userDao: UserDAO) : ViewModel() {
             } else {
                 onError("Invalid credentials")
             }
+        }
+    }
+    fun updateUserProfile() {
+        viewModelScope.launch {
+            val user = User(
+                firstname = state.value.firstname,
+                lastname = state.value.lastname,
+                username = state.value.username,
+                password = state.value.password
+            )
+            userDao.update(user)
         }
     }
 }

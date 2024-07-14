@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Final_Project</string>
+    <string name="app_name">To do</string>
+    <string name="login">Log in</string>
+    <string name="signup">Sign Up</string>
+    <string name="add_todo_title">Add Todo</string>
+    <string name="edit_todo_title">Edit Todo</string>
+    <string name="search_todo_title">Search Todo</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_updete_title">Profile update</string>
 </resources>

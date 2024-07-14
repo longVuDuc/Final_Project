@@ -14,9 +14,12 @@ import com.example.final_project.screen.AddTodoScreen
 import com.example.final_project.screen.HomeDestination
 import com.example.final_project.screen.HomeScreen
 import com.example.final_project.screen.LoginDestination
+import com.example.final_project.screen.ProfileDestination
+import com.example.final_project.screen.ProfileScreen
+import com.example.final_project.screen.ProfileUpdateDestination
+import com.example.final_project.screen.ProfileUpdateScreen
 import com.example.final_project.screen.SearchDestination
 import com.example.final_project.screen.SearchScreen
-import com.example.final_project.screen.SettingDestination
 import com.example.final_project.screen.SignIn
 import com.example.final_project.screen.SignUpDestination
 import com.example.final_project.screen.TodoEditDestination
@@ -55,7 +58,7 @@ fun AppNavigation() {
                 navigateToAddTodo = { navController.navigate(AddTodoDestination.route) },
                 navigateTohome = { navController.navigate(HomeDestination.route) },
                 navigateToSearchTodo = { navController.navigate(SearchDestination.route) },
-                navigateToSetting = { navController.navigate(SettingDestination.route) },
+                navigateToSetting = { navController.navigate(ProfileDestination.route) },
                 navigateToEditTodo =  { todoId -> navController.navigate("${TodoEditDestination.route}/$todoId") }
             )
         }
@@ -80,12 +83,21 @@ fun AppNavigation() {
             SearchScreen(
                 navigateToHome = { navController.navigate(HomeDestination.route) },
                 navigateToSearchTodo = { navController.navigate(SearchDestination.route) },
-                navigateToSetting = { navController.navigate(SettingDestination.route) },
+                navigateToSetting = { navController.navigate(ProfileDestination.route) },
                 navigateToEditTodo =  { todoId -> navController.navigate("${TodoEditDestination.route}/$todoId") }
             )
         }
-        composable(route = SettingDestination.route) {
-            // Settings screen composable
+        composable(route = ProfileDestination.route) {
+            ProfileScreen(
+                navigateToProfileUpdate = { navController.navigate(ProfileUpdateDestination.route) },
+                navigateToLogIn = { navController.navigate(LoginDestination.route) }
+
+            )
+        }
+        composable(route = ProfileUpdateDestination.route){
+            ProfileUpdateScreen(
+                navigateToSetting = {navController.navigate((ProfileDestination.route))}
+            )
         }
     }
 }
