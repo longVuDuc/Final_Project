@@ -4,22 +4,30 @@ import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.widget.TimePicker
 import android.icu.text.SimpleDateFormat
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -33,18 +41,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
+import androidx.compose.ui.unit.sp
 import com.example.final_project.AppViewModels
 import com.example.final_project.R
 import com.example.final_project.TodoList.TodoAddViewModel
-import com.example.final_project.TodoList.TodoDetailViewModel
 import com.example.final_project.navigation.NavigationDestination
+import kotlin.math.round
 
 object AddTodoDestination : NavigationDestination {
     override val route = "Add_ToDo"
@@ -57,7 +66,7 @@ fun AddTodoScreen(
     navigateTohome : () -> Unit,
     vModel: TodoAddViewModel = viewModel(factory = AppViewModels.Factory)
 ) {
-    var dateResult by remember { mutableStateOf("Date") }
+    var dateResult by remember { mutableStateOf("Today") }
     val opendateDialog = remember { mutableStateOf(false) }
     var timeResult by remember { mutableStateOf("Time") }
     val opentimeDialog = remember { mutableStateOf(false) }
@@ -68,12 +77,20 @@ fun AddTodoScreen(
         mutableStateOf("")
     }
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
+        IconButton(onClick = { navigateTohome()}) {
+            Icon(Icons.Filled.Close, tint = Color.White, contentDescription = "Close Icon")
+        }
+        Text(text = "Create new task")
+        Spacer(modifier = Modifier.height(30.dp))
         TextField(
             value = state.name,
             onValueChange = { vModel.setName(it) },
-            label = { Text(text = "Name") },
+            label = { Text(text = "Name", fontSize = 20.sp) },
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
@@ -87,109 +104,82 @@ fun AddTodoScreen(
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        ExposedDropdownMenuBox(expanded = dropdownExpanded,
-            onExpandedChange = {dropdownExpanded = it},
+        Spacer(modifier = Modifier.height(20.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
         ) {
-            TextField(
-                readOnly = true,
-                value = priority,
-                onValueChange = { },
-                label = { Text("Priority") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = dropdownExpanded
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                modifier = Modifier.menuAnchor()
-            )
-            ExposedDropdownMenu(expanded = dropdownExpanded,
-                onDismissRequest = { dropdownExpanded = false },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-            )
-            {
-                DropdownMenuItem(
-                    text = { Text(text = "1") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(1)
-                        priority = "1"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "2") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(2)
-                        priority = "2"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "3") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(3)
-                        priority = "3"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "4") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(4)
-                        priority = "4"
-                    }
-                )
-            }
-            ExposedDropdownMenu(expanded = dropdownExpanded,
-                onDismissRequest = { dropdownExpanded = false},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
+            Text(text = "Priority", fontSize = 20.sp)
+            Spacer(modifier = Modifier.width(200.dp))
+            ExposedDropdownMenuBox(expanded = dropdownExpanded,
+                onExpandedChange = {dropdownExpanded = it},
+                modifier = Modifier.width(80.dp)
             ) {
-                DropdownMenuItem(
-                    text = { Text(text = "1") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(1)
-                        priority = "1"
-                    }
+                TextField(
+                    readOnly = true,
+                    value = priority,
+                    onValueChange = { },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(
+                            expanded = dropdownExpanded
+                        )
+                    },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    modifier = Modifier.menuAnchor()
                 )
-                DropdownMenuItem(
-                    text = { Text(text = "2") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(2)
-                        priority = "2"
-                    }
+                ExposedDropdownMenu(expanded = dropdownExpanded,
+                    onDismissRequest = { dropdownExpanded = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
-                DropdownMenuItem(
-                    text = { Text(text = "3") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(3)
-                        priority = "3"
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "4") },
-                    onClick = {
-                        dropdownExpanded = false
-                        vModel.setPriority(4)
-                        priority = "4"
-                    }
-                )
+                {
+                    DropdownMenuItem(
+                        text = { Text(text = "1") },
+                        onClick = {
+                            dropdownExpanded = false
+                            vModel.setPriority(1)
+                            priority = "1"
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "2") },
+                        onClick = {
+                            dropdownExpanded = false
+                            vModel.setPriority(2)
+                            priority = "2"
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "3") },
+                        onClick = {
+                            dropdownExpanded = false
+                            vModel.setPriority(3)
+                            priority = "3"
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = "4") },
+                        onClick = {
+                            dropdownExpanded = false
+                            vModel.setPriority(4)
+                            priority = "4"
+                        }
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Row(modifier = Modifier
             .fillMaxWidth()
             .align(Alignment.CenterHorizontally)){
-            OutlinedButton(onClick = { opendateDialog.value = true }) {
-                Text(dateResult)
+            Text(text = "Date", fontSize = 20.sp)
+            Spacer(modifier = Modifier.width(215.dp))
+            Button(onClick = { opendateDialog.value = true },
+                shape = RoundedCornerShape(7.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFF363636))
+            ){
+                Text(dateResult, color = Color.White, fontSize = 16.sp)
             }
             if (opendateDialog.value) {
                 val datePickerState = rememberDatePickerState()
@@ -223,9 +213,18 @@ fun AddTodoScreen(
                     DatePicker(state = datePickerState)
                 }
             }
-            Spacer(modifier = Modifier.width(30.dp))
-            OutlinedButton(onClick = { opentimeDialog.value = true }) {
-                Text(timeResult)
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.CenterHorizontally)) {
+            Text(text = "Time", fontSize = 20.sp)
+            Spacer(modifier = Modifier.width(215.dp))
+            Button(onClick = { opentimeDialog.value = true },
+                shape = RoundedCornerShape(7.dp),
+                colors = ButtonDefaults.buttonColors(Color(0xFF363636))
+                ) {
+                Text(timeResult, color = Color.White, fontSize = 16.sp)
             }
             if (opentimeDialog.value) {
                 val calendar = Calendar.getInstance()
@@ -245,20 +244,14 @@ fun AddTodoScreen(
                 ).show()
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(onClick = { /* Handle cancel action */ }) {
-                Text("Cancel")
-            }
-            Button(onClick = { vModel.add() }) {
-                Text("Add")
-            }
-            Button(onClick = { navigateTohome()}) {
-                Text(text = "Back")
-            }
+        Spacer(modifier = Modifier.height(200.dp))
+        Button(onClick = { vModel.add() },
+            shape = RoundedCornerShape(7.dp),
+            modifier = Modifier.fillMaxWidth()
+            ) {
+            Text("Add")
         }
+
     }
 }
 
