@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -88,7 +89,7 @@ fun loginScreen(navigateTohome : () -> Unit,
         Spacer(modifier = Modifier.height(8.dp))
         ClickableText(text = AnnotatedString("Does not have an account? Sign up here"),
             onClick = { navigateToSignUp() },
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp, color = Color.White)
             )
     }
     // Display error dialog if showErrorDialog is true

@@ -21,7 +21,6 @@ class TodoDetailViewModel(private val todoDAO: TodoDAO) : ViewModel() {
                 .collect { todoItem ->
                     _state.value = UiState(
                         id = todoItem.id,
-                        tags = todoItem.tags,
                         name = todoItem.name,
                         description = todoItem.description,
                         date = todoItem.date,
@@ -32,16 +31,16 @@ class TodoDetailViewModel(private val todoDAO: TodoDAO) : ViewModel() {
                 }
         }
     }
-    fun updateTodoItem(uiState: UiState) {
+    fun updateTodoItem() {
         viewModelScope.launch {
             val st = TodoItem(
                 id = _state.value.id,
-                tags = _state.value.tags,
                 name = _state.value.name,
                 description = _state.value.description,
                 date = _state.value.date,
                 time = _state.value.time,
                 priority = _state.value.priority,
+                userID = _state.value.userID
             )
             todoDAO.update(st)
         }

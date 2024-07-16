@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,6 +59,12 @@ fun SignIn(navigateToLogIn: () -> Unit,
             singleLine = true
         )
         Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(value = state.email,
+            onValueChange = {vModel.setemail(it)},
+            label = { Text(text = "email" ) },
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(value = state.username,
             onValueChange = {vModel.setusername(it)},
             label = { Text(text = "Username" ) },
@@ -77,7 +84,7 @@ fun SignIn(navigateToLogIn: () -> Unit,
         }
         ClickableText(text = AnnotatedString("Already have an account? Login here"),
             onClick = { navigateToLogIn() },
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp)
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp, color = Color.White)
             )
         }
 }

@@ -36,8 +36,6 @@ fun TodoCard(todo: TodoItem, onItemClick: (Int) -> Unit) {
                     Text(text = todo.date, fontSize = 16.sp, style = MaterialTheme.typography.bodyMedium)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = todo.time, fontSize = 16.sp, style = MaterialTheme.typography.bodyMedium)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = todo.tags, fontSize = 16.sp, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.final_project.Database.TodoDAO
 import com.example.final_project.Database.TodoItem
+import com.example.final_project.user.UserViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +15,10 @@ import kotlinx.coroutines.launch
 
 
 class TodoListViewModel(private val todoDAO: TodoDAO) : ViewModel() {
+    var userViewModel: UserViewModel? = null
     val TodolistUiState: StateFlow<TodoListUiState>
         get() {
-            return todoDAO.GetAll().map { TodoListUiState(it) }
+            return todoDAO.getTodoListByUserId(userViewModel?.loggedInUserId ?: -1).map { TodoListUiState(it) }
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5_000L),
@@ -29,7 +31,7 @@ class TodoListViewModel(private val todoDAO: TodoDAO) : ViewModel() {
 
     fun performSearch(query: String) {
         viewModelScope.launch {
-            val allTodos = todoDAO.GetAll().firstOrNull() ?: emptyList()
+            val allTodos = todoDAO.getTodoListByUserId(userViewModel?.loggedInUserId ?: -1).firstOrNull() ?: emptyList()
             _searchResults.value = allTodos.filter {
                 it.name.contains(query, ignoreCase = true) || it.description.contains(query, ignoreCase = true)
             }

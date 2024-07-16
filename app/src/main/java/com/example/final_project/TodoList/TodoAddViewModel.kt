@@ -15,11 +15,6 @@ import kotlinx.coroutines.launch
 class TodoAddViewModel (private val todoDAO: TodoDAO): ViewModel() {
     private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state.asStateFlow()
-    fun setTag(Tag: String) {
-        _state.update {
-            it.copy(tags = Tag)
-        }
-    }
     fun setName(name: String) {
         _state.update {
             it.copy(name = name)
@@ -49,17 +44,17 @@ class TodoAddViewModel (private val todoDAO: TodoDAO): ViewModel() {
         viewModelScope.launch {
             val st = TodoItem(
                 id = _state.value.id,
-                tags = _state.value.tags,
                 name = _state.value.name,
                 description = _state.value.description,
                 date = _state.value.date,
                 time = _state.value.time,
                 priority = _state.value.priority,
+                userID = _state.value.userID,
                 )
             todoDAO.add(st)
         }
         _state.update {
-            it.copy( tags = "", name = "", description = "", priority = 0, status = Status.INPROCESS)
+            it.copy( name = "", description = "", priority = 0, status = Status.INPROCESS)
         }
     }
     fun setcomplete(){

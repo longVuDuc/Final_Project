@@ -4,19 +4,24 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TodoDAO {
     @Insert
-    suspend fun add(st: TodoItem)
-    @Query("SELECT * FROM TodoItem where id = :id")
+    suspend fun add(todoItem: TodoItem)
+
+    @Query("SELECT * FROM TodoItem WHERE id = :id")
     fun getTodo(id: Int): Flow<TodoItem?>
-    @Query("SELECT * FROM TodoItem")
-    fun GetAll(): Flow<List<TodoItem>>
+
+    @Query("SELECT * FROM TodoItem WHERE userId = :userId")
+    fun getTodoListByUserId(userId: Int): Flow<List<TodoItem>>
+
     @Update
-    suspend fun update(TodoItem: TodoItem)
+    suspend fun update(todoItem: TodoItem)
+
     @Delete
-    suspend fun delete(TodoItem: TodoItem)
+    suspend fun delete(todoItem: TodoItem)
 }

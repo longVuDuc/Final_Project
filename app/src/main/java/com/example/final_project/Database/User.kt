@@ -7,6 +7,7 @@ data class User(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val firstname: String = "",
     val lastname: String = "",
+    val email : String = "",
     val username: String = "",
     val password: String = "",
 )
