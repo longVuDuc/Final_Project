@@ -40,6 +40,11 @@ class TodoAddViewModel (private val todoDAO: TodoDAO): ViewModel() {
             it.copy(priority = Priority)
         }
     }
+    fun setUserid(UserId: Int) {
+        _state.update {
+            it.copy(userID = UserId)
+        }
+    }
     fun add() {
         viewModelScope.launch {
             val st = TodoItem(
@@ -57,9 +62,6 @@ class TodoAddViewModel (private val todoDAO: TodoDAO): ViewModel() {
             it.copy( name = "", description = "", priority = 0, status = Status.INPROCESS)
         }
     }
-    fun setcomplete(){
-        _state.update {
-            it.copy(status = Status.COMPLETE)
-        }
-    }
+
+
 }

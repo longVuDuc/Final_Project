@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -29,8 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.final_project.AppViewModels
 import com.example.final_project.R
+import com.example.final_project.TodoList.TodoAddViewModel
+import com.example.final_project.TodoList.TodoDetailViewModel
 import com.example.final_project.TodoList.TodoListViewModel
 import com.example.final_project.navigation.NavigationDestination
+import com.example.final_project.user.UserViewModel
 
 object SearchDestination : NavigationDestination {
     override val route = "search_Screen"
@@ -43,9 +44,11 @@ fun SearchScreen(
     navigateToEditTodo: (Int) -> Unit,
     navigateToHome: () -> Unit,
     navigateToProfile: () -> Unit,
-    navigateToSearchTodo: () -> Unit
+    navigateToSearchTodo: () -> Unit,
+    userID : Int,
 ) {
     val query = remember { mutableStateOf("") }
+    val todovModel : TodoDetailViewModel = viewModel (factory = AppViewModels.Factory)
     val searchResults by vModel.searchResults.collectAsState()
     Scaffold(
         topBar = {
@@ -76,7 +79,7 @@ fun SearchScreen(
                 value = query.value,
                 onValueChange = {
                     query.value = it
-                    vModel.performSearch(it)
+                    vModel.performSearch(it,userID)
                 },
                 label = { Text("Search") },
                 modifier = Modifier
@@ -88,7 +91,8 @@ fun SearchScreen(
                 items(searchResults) { item ->
                     TodoCard(todo = item, onItemClick = {
                         navigateToEditTodo(item.id)
-                    })
+                    }
+                    )
                 }
             }
         }

@@ -4,88 +4,64 @@ import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.widget.TimePicker
 import android.icu.text.SimpleDateFormat
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.final_project.AppViewModels
 import com.example.final_project.R
 import com.example.final_project.TodoList.TodoAddViewModel
 import com.example.final_project.navigation.NavigationDestination
-import kotlin.math.round
+import java.util.*
+
 
 object AddTodoDestination : NavigationDestination {
     override val route = "Add_ToDo"
     override val titleRes = R.string.add_todo_title
 }
+
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTodoScreen(
-    navigateTohome : () -> Unit,
+    navigateTohome: () -> Unit,
+    userID : Int,
     vModel: TodoAddViewModel = viewModel(factory = AppViewModels.Factory)
 ) {
     var dateResult by remember { mutableStateOf("Today") }
-    val opendateDialog = remember { mutableStateOf(false) }
+    val openDateDialog = remember { mutableStateOf(false) }
     var timeResult by remember { mutableStateOf("Time") }
-    val opentimeDialog = remember { mutableStateOf(false) }
+    val openTimeDialog = remember { mutableStateOf(false) }
     val state by vModel.state.collectAsState()
     val context = LocalContext.current
     var dropdownExpanded by remember { mutableStateOf(false) }
-    var priority by remember {
-        mutableStateOf("")
-    }
+    var priority by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = { navigateTohome()}) {
+        IconButton(onClick = { navigateTohome() }) {
             Icon(Icons.Filled.Close, tint = Color.White, contentDescription = "Close Icon")
         }
-        Text(text = "Create new task")
+        Text(text = "Create new task", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(30.dp))
         TextField(
             value = state.name,
@@ -110,10 +86,13 @@ fun AddTodoScreen(
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
         ) {
+            Icon(Icons.Filled.Flag, tint = Color.White, contentDescription = "flag Icon")
+            Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Priority", fontSize = 20.sp)
-            Spacer(modifier = Modifier.width(200.dp))
-            ExposedDropdownMenuBox(expanded = dropdownExpanded,
-                onExpandedChange = {dropdownExpanded = it},
+            Spacer(modifier = Modifier.weight(1f))
+            ExposedDropdownMenuBox(
+                expanded = dropdownExpanded,
+                onExpandedChange = { dropdownExpanded = it },
                 modifier = Modifier.width(80.dp)
             ) {
                 TextField(
@@ -121,75 +100,55 @@ fun AddTodoScreen(
                     value = priority,
                     onValueChange = { },
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = dropdownExpanded
-                        )
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpanded)
                     },
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
                     modifier = Modifier.menuAnchor()
                 )
-                ExposedDropdownMenu(expanded = dropdownExpanded,
+                ExposedDropdownMenu(
+                    expanded = dropdownExpanded,
                     onDismissRequest = { dropdownExpanded = false },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-                {
-                    DropdownMenuItem(
-                        text = { Text(text = "1") },
-                        onClick = {
-                            dropdownExpanded = false
-                            vModel.setPriority(1)
-                            priority = "1"
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "2") },
-                        onClick = {
-                            dropdownExpanded = false
-                            vModel.setPriority(2)
-                            priority = "2"
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "3") },
-                        onClick = {
-                            dropdownExpanded = false
-                            vModel.setPriority(3)
-                            priority = "3"
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "4") },
-                        onClick = {
-                            dropdownExpanded = false
-                            vModel.setPriority(4)
-                            priority = "4"
-                        }
-                    )
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    for (i in 1..4) {
+                        DropdownMenuItem(
+                            text = { Text(text = i.toString()) },
+                            onClick = {
+                                dropdownExpanded = false
+                                vModel.setPriority(i)
+                                priority = i.toString()
+                            }
+                        )
+                    }
                 }
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .align(Alignment.CenterHorizontally)){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+        ) {
+            Icon(Icons.Filled.DateRange, tint = Color.White, contentDescription = "date Icon")
+            Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Date", fontSize = 20.sp)
-            Spacer(modifier = Modifier.width(215.dp))
-            Button(onClick = { opendateDialog.value = true },
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = { openDateDialog.value = true },
                 shape = RoundedCornerShape(7.dp),
                 colors = ButtonDefaults.buttonColors(Color(0xFF363636))
-            ){
+            ) {
                 Text(dateResult, color = Color.White, fontSize = 16.sp)
             }
-            if (opendateDialog.value) {
+            if (openDateDialog.value) {
                 val datePickerState = rememberDatePickerState()
                 val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
                 DatePickerDialog(
-                    onDismissRequest = { opendateDialog.value = false },
+                    onDismissRequest = { openDateDialog.value = false },
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                opendateDialog.value = false
+                                openDateDialog.value = false
                                 dateResult = datePickerState.selectedDateMillis?.let {
                                     convertLongToDateString(it)
                                 } ?: "No selection"
@@ -201,11 +160,7 @@ fun AddTodoScreen(
                         }
                     },
                     dismissButton = {
-                        TextButton(
-                            onClick = {
-                                opendateDialog.value = false
-                            }
-                        ) {
+                        TextButton(onClick = { openDateDialog.value = false }) {
                             Text(text = "Cancel")
                         }
                     }
@@ -215,18 +170,23 @@ fun AddTodoScreen(
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .align(Alignment.CenterHorizontally)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+        ) {
+            Icon(Icons.Filled.AccessTime, tint = Color.White, contentDescription = "time Icon")
+            Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Time", fontSize = 20.sp)
-            Spacer(modifier = Modifier.width(215.dp))
-            Button(onClick = { opentimeDialog.value = true },
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = { openTimeDialog.value = true },
                 shape = RoundedCornerShape(7.dp),
                 colors = ButtonDefaults.buttonColors(Color(0xFF363636))
-                ) {
+            ) {
                 Text(timeResult, color = Color.White, fontSize = 16.sp)
             }
-            if (opentimeDialog.value) {
+            if (openTimeDialog.value) {
                 val calendar = Calendar.getInstance()
                 val hour = calendar.get(Calendar.HOUR_OF_DAY)
                 val minute = calendar.get(Calendar.MINUTE)
@@ -235,23 +195,27 @@ fun AddTodoScreen(
                     context,
                     { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
                         timeResult = String.format("%02d:%02d", selectedHour, selectedMinute)
-                        opentimeDialog.value = false
+                        openTimeDialog.value = false
                         vModel.settime(timeResult)
                     },
                     hour,
                     minute,
-                    true,
+                    true
                 ).show()
             }
         }
-        Spacer(modifier = Modifier.height(200.dp))
-        Button(onClick = { vModel.add() },
+        Spacer(modifier = Modifier.weight(1f))
+        Button(
+            onClick = {
+                vModel.setUserid(userID)
+                vModel.add()
+                navigateTohome()
+                      },
             shape = RoundedCornerShape(7.dp),
-            modifier = Modifier.fillMaxWidth()
-            ) {
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Text("Add")
         }
-
     }
 }
 

@@ -60,9 +60,10 @@ fun ProfileScreen(
     navigateToHome: () -> Unit,
     navigateToSearch: () -> Unit,
     vModel: UserViewModel = viewModel(factory = AppViewModels.Factory),
-    navigateToLogIn: () -> Unit
+    navigateToLogIn: () -> Unit,
+    userID : Int
 ) {
-    val userState by vModel.state.collectAsState()
+    val userState by vModel.fetchUserById(userID).collectAsState(initial = null)
     var showProfileUpdateDialog by remember { mutableStateOf(false) }
     var showPasswordUpdateDialog by remember { mutableStateOf(false) }
 
@@ -83,123 +84,124 @@ fun ProfileScreen(
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-        ) {
-            Text(text = "Firstname", color = Color.White)
-            Spacer(modifier = Modifier.height(10.dp))
-            Box(
+        userState?.let { user ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color(0xFF363636), RoundedCornerShape(4.dp))
-                    .padding(8.dp)
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(16.dp)
             ) {
-                Text(text = userState.firstname)
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Lastname", color = Color.White)
-            Spacer(modifier = Modifier.height(10.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color(0xFF363636), RoundedCornerShape(4.dp))
-                    .padding(8.dp)
-            ) {
-                Text(text = userState.lastname)
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Email", color = Color.White)
-            Spacer(modifier = Modifier.height(10.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, Color(0xFF363636), RoundedCornerShape(4.dp))
-                    .padding(8.dp)
-            ) {
-                Text(text = userState.email)
-            }
-            Spacer(modifier = Modifier.width(20.dp))
-            TextButton  (onClick = { showProfileUpdateDialog = true }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                Text(text = "Firstname", color = Color.White)
+                Spacer(modifier = Modifier.height(10.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color(0xFF363636), RoundedCornerShape(4.dp))
+                        .padding(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        tint = Color.White,
-                        contentDescription = "Profile Icon"
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))  // Adjust the spacing as needed
-                    Text(
-                        text = "Change profile info",
-                        color = Color.White,
-                        fontSize = 18.sp
-                    )
-                    Spacer(modifier = Modifier.weight(1f))  // Pushes the arrow icon to the end
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowRight,
-                        tint = Color.White,
-                        contentDescription = "Arrow"
-                    )
+                    Text(text = user.firstname, fontSize = 16.sp)
                 }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            TextButton  (onClick = { showProfileUpdateDialog = true }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "Lastname", color = Color.White)
+                Spacer(modifier = Modifier.height(10.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color(0xFF363636), RoundedCornerShape(4.dp))
+                        .padding(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Lock,
-                        tint = Color.White,
-                        contentDescription = "lock Icon"
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))  // Adjust the spacing as needed
-                    Text(
-                        text = "Change account password",
-                        color = Color.White,
-                        fontSize = 18.sp
-                    )
-                    Spacer(modifier = Modifier.weight(1f))  // Pushes the arrow icon to the end
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowRight,
-                        tint = Color.White,
-                        contentDescription = "Arrow"
-                    )
+                    Text(text = user.lastname, fontSize = 16.sp)
                 }
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            TextButton(
-                onClick = {
-                    vModel.logoutUser()
-                    navigateToLogIn()
-                },
-            ) {
-                Text("Logout", color = Color.Red, fontSize = 20.sp)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "Email", color = Color.White)
+                Spacer(modifier = Modifier.height(10.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color(0xFF363636), RoundedCornerShape(4.dp))
+                        .padding(8.dp)
+                ) {
+                    Text(text = user.email, fontSize = 16.sp)
+                }
+                Spacer(modifier = Modifier.width(60.dp))
+                TextButton(onClick = { showProfileUpdateDialog = true }) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            tint = Color.White,
+                            contentDescription = "Profile Icon"
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))  // Adjust the spacing as needed
+                        Text(
+                            text = "Change profile info",
+                            color = Color.White,
+                            fontSize = 18.sp
+                        )
+                        Spacer(modifier = Modifier.weight(1f))  // Pushes the arrow icon to the end
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowRight,
+                            tint = Color.White,
+                            contentDescription = "Arrow"
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(onClick = { showProfileUpdateDialog = true }) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Lock,
+                            tint = Color.White,
+                            contentDescription = "lock Icon"
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))  // Adjust the spacing as needed
+                        Text(
+                            text = "Change account password",
+                            color = Color.White,
+                            fontSize = 18.sp
+                        )
+                        Spacer(modifier = Modifier.weight(1f))  // Pushes the arrow icon to the end
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowRight,
+                            tint = Color.White,
+                            contentDescription = "Arrow"
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                TextButton(
+                    onClick = {
+                        vModel.logoutUser()
+                        navigateToLogIn()
+                    },
+                ) {
+                    Text("Logout", color = Color.Red, fontSize = 20.sp)
+                }
             }
         }
+        if (showProfileUpdateDialog) {
+            ChangeProfileDialog(
+                vModel = vModel,
+                onDismissRequest = { showProfileUpdateDialog = false })
+        }
+        if (showPasswordUpdateDialog) {
+            ChangePasswordDialog(
+                vModel = vModel,
+                onDismissRequest = { showPasswordUpdateDialog = false })
+        }
     }
-    if (showProfileUpdateDialog) {
-        ChangeProfileDialog(
-            vModel = vModel,
-            onDismissRequest = { showProfileUpdateDialog = false })
-    }
-    if (showPasswordUpdateDialog) {
-        ChangePasswordDialog(
-            vModel = vModel,
-            onDismissRequest = { showPasswordUpdateDialog = false })
-    }
-
 }
 
 @Composable
 fun ChangeProfileDialog(
     vModel: UserViewModel,
     onDismissRequest: () -> Unit) {
-    val userState by vModel.state.collectAsState()
+    val userState by vModel.userState.collectAsState()
     var firstname by remember(userState) { mutableStateOf(userState.firstname) }
     var lastname by remember(userState) { mutableStateOf(userState.lastname) }
     var email by remember(userState) { mutableStateOf(userState.email) }
@@ -259,7 +261,7 @@ fun ChangeProfileDialog(
 fun ChangePasswordDialog(
     vModel: UserViewModel,
     onDismissRequest: () -> Unit) {
-    val userState by vModel.state.collectAsState()
+    val userState by vModel.userState.collectAsState()
     var password by remember(userState) { mutableStateOf(userState.password) }
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
@@ -289,7 +291,7 @@ fun ChangePasswordDialog(
                     Spacer(modifier = Modifier.width(8.dp))
                     OutlinedButton(onClick = {
                         onDismissRequest()
-                        vModel.updateProfile()
+                        vModel.changePassword(password)
                     }) {
                         Text("Edit", color = Color.White)
                     }

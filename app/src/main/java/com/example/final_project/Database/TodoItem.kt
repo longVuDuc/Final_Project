@@ -18,14 +18,7 @@ class TodoItem(
     val userID : Int
 ) {
 }
-data class UserWithTodoList(
-    @Embedded val user: User,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "userID"
-    )
-    val playlists: List<TodoItem>
-)
+
 enum class Status {
     COMPLETE,
     INPROCESS

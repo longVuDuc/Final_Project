@@ -33,14 +33,14 @@ object LoginDestination : NavigationDestination {
     override val titleRes = R.string.login
 }
 @Composable
-fun loginScreen(navigateTohome : () -> Unit,
+fun loginScreen(navigateTohome : (Int) -> Unit,
                 navigateToSignUp : () -> Unit,
                 vModel: UserViewModel = viewModel(factory = AppViewModels.Factory),
 ) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val isFieldsNotEmpty = userName.isNotEmpty() && password.isNotEmpty()
     var showErrorDialog by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -76,14 +76,14 @@ fun loginScreen(navigateTohome : () -> Unit,
                 username = userName,
                 password = password,
                 onSuccess = {
-                    // Navigate to home screen
-                    navigateTohome()
+                        userId -> navigateTohome(userId)
                 },
                 onError = {
                     showErrorDialog = true
                 }
-            )
-        }) {
+            )},
+            enabled = isFieldsNotEmpty
+            ) {
             Text("Login")
         }
         Spacer(modifier = Modifier.height(8.dp))

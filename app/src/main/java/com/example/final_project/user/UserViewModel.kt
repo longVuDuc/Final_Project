@@ -1,102 +1,109 @@
 package com.example.final_project.user
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.final_project.Database.TodoItem
 import com.example.final_project.Database.User
 import com.example.final_project.Database.UserDAO
-import com.example.final_project.TodoList.UiState
+import com.example.final_project.TodoList.TodoListUiState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UserViewModel(private val userDao: UserDAO) : ViewModel() {
-    private val _state: MutableStateFlow<User> = MutableStateFlow(User())
-    val state: StateFlow<User> = _state.asStateFlow()
+    private val _userstate: MutableStateFlow<User> = MutableStateFlow(User())
+    val userState: StateFlow<User> = _userstate.asStateFlow()
     private val _userLoggedIn = MutableStateFlow(false)
-
-    var loggedInUserId: Int? = null
-    fun setfirstname(firstname: String) {
-        _state.update {
-            it.copy(firstname = firstname)
-        }
+    fun setFirstname(firstname: String) {
+        _userstate.update { it.copy(firstname = firstname) }
     }
-    fun setlastname(lastname: String) {
-        _state.update {
-            it.copy(lastname = lastname)
-        }
+    fun setLastname(lastname: String) {
+        _userstate.update { it.copy(lastname = lastname) }
     }
-    fun setemail(email: String) {
-        _state.update {
-            it.copy(email = email)
-        }
+    fun setEmail(email: String) {
+        _userstate.update { it.copy(email = email) }
     }
-    fun setusername(username: String) {
-        _state.update {
-            it.copy(username = username)
-        }
+    fun setUsername(username: String) {
+        _userstate.update { it.copy(username = username) }
     }
-    fun setpassword(password: String) {
-        _state.update {
-            it.copy(password = password)
-        }
+    fun setPassword(password: String) {
+        _userstate.update { it.copy(password = password) }
     }
 
+    // Add user to the database
     fun add() {
         viewModelScope.launch {
-            val user = User(
-                id = _state.value.id,
-                firstname = _state.value.firstname,
-                lastname = _state.value.lastname,
-                email = _state.value.email,
-                username = _state.value.username,
-                password = _state.value.password,
-            )
-            userDao.add(user)
-        }
-        _state.update {
-            it.copy(firstname = "", lastname = "", username = "", password = "")
+            val user = _userstate.value.copy()
+            try {
+                withContext(Dispatchers.IO) {
+                    userDao.add(user)
+                }
+                _userstate.update { it.copy(firstname = "", lastname = "", username = "", password = "") }
+            } catch (e: Exception) {
+                // Handle exception (e.g., log error, show error message)
+            }
         }
     }
 
-    fun validateUserCredentials(username: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun validateUserCredentials(username: String, password: String, onSuccess: (Int) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val user = withContext(Dispatchers.IO) {
-                userDao.getUser(username, password)
-            }
-            if (user != null) {
-                loggedInUserId = user.id
-                _userLoggedIn.value = true
-                onSuccess()
-            } else {
-                onError("Invalid credentials")
+            try {
+                val user = withContext(Dispatchers.IO) {
+                    userDao.getUser(username, password)
+                }
+                if (user != null) {
+                    _userLoggedIn.value = true
+                    onSuccess(user.id)
+                } else {
+                    onError("Invalid credentials")
+                }
+            } catch (e: Exception) {
+                onError("Error validating credentials")
             }
         }
     }
+
+
+    // Update user profile
     fun updateProfile() {
         viewModelScope.launch {
-            val user = User(
-                firstname = state.value.firstname,
-                lastname = state.value.lastname,
-                email = state.value.email,
+            val st = User(
+                id = _userstate.value.id,
+                firstname = _userstate.value.firstname,
+                lastname = _userstate.value.lastname,
+                email = _userstate.value.email,
             )
-            userDao.update(user)
+            userDao.update(st)
         }
     }
-    fun changepassword(){
+
+    fun changePassword(newPassword: String) {
         viewModelScope.launch {
-            val user = User(
-                password = state.value.password
+            val st = User(
+                password = newPassword
             )
-            userDao.update(user)
+            userDao.update(st)
         }
     }
+    fun fetchUserById(userId: Int): StateFlow<User?> {
+        val userFlow = MutableStateFlow<User?>(null)
+        viewModelScope.launch {
+            val user = withContext(Dispatchers.IO) {
+                userDao.getUserbyID(userId)
+            }
+            userFlow.value = user
+        }
+        return userFlow.asStateFlow()
+    }
+    // Logout user
     fun logoutUser() {
-        loggedInUserId = null
         _userLoggedIn.value = false
     }
 }

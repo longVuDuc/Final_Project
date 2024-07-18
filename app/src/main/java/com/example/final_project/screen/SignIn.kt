@@ -14,6 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +40,12 @@ object SignUpDestination : NavigationDestination {
 fun SignIn(navigateToLogIn: () -> Unit,
     vModel: UserViewModel = viewModel(factory = AppViewModels.Factory)
 ) {
-    val state by vModel.state.collectAsState()
+    val state by vModel.userState.collectAsState()
+    val isFieldsNotEmpty = state.firstname.isNotEmpty()
+            && state.lastname.isNotEmpty()
+            && state.email.isNotEmpty()
+            && state.username.isNotEmpty()
+            && state.password.isNotEmpty()
     Column(
     modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
@@ -48,38 +56,38 @@ fun SignIn(navigateToLogIn: () -> Unit,
         Text(text = "Create new account")
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(value = state.firstname,
-            onValueChange = { vModel.setfirstname(it) },
+            onValueChange = { vModel.setFirstname(it) },
             label = { Text(text = "Fistname" ) },
             singleLine = true
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(value = state.lastname,
-            onValueChange = {vModel.setlastname(it)},
+            onValueChange = {vModel.setLastname(it)},
             label = { Text(text = "Lastname" ) },
             singleLine = true
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(value = state.email,
-            onValueChange = {vModel.setemail(it)},
+            onValueChange = {vModel.setEmail(it)},
             label = { Text(text = "email" ) },
             singleLine = true
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(value = state.username,
-            onValueChange = {vModel.setusername(it)},
+            onValueChange = {vModel.setUsername(it)},
             label = { Text(text = "Username" ) },
             singleLine = true
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(value = state.password,
-            onValueChange = {vModel.setpassword(it)},
+            onValueChange = {vModel.setPassword(it)},
             label = { Text(text = "Password") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Button(onClick = { vModel.add() }) {
+        Button(onClick = { vModel.add() }, enabled = isFieldsNotEmpty) {
             Text(text = "Sign Up")
         }
         ClickableText(text = AnnotatedString("Already have an account? Login here"),

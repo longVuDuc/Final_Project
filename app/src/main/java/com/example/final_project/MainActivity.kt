@@ -46,40 +46,50 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation() {
-    Surface(color = MaterialTheme.colorScheme.background){
+    Surface(color = MaterialTheme.colorScheme.background) {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = HomeDestination.route,
+            startDestination = LoginDestination.route,
         ) {
-            composable(route = LoginDestination.route){
+            composable(route = LoginDestination.route) {
                 loginScreen(
-                    navigateTohome = { navController.navigate(HomeDestination.route) },
+                    navigateTohome = { userId -> navController.navigate("${HomeDestination.route}/$userId") },
                     navigateToSignUp = { navController.navigate(SignUpDestination.route) },
                 )
             }
-            composable(route = SignUpDestination.route){
+            composable(route = SignUpDestination.route) {
                 SignIn(
                     navigateToLogIn = { navController.navigate(LoginDestination.route) }
                 )
             }
-            composable(route = HomeDestination.route) {
+            composable(
+                route = "${HomeDestination.route}/{userId}",
+                arguments = listOf(navArgument("userId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val userId = backStackEntry.arguments?.getInt("userId") ?: throw IllegalArgumentException("userId not found in arguments")
                 HomeScreen(
-                    navigateToAddTodo = { navController.navigate(AddTodoDestination.route) },
-                    navigateTohome = { navController.navigate(HomeDestination.route) },
-                    navigateToSearchTodo = { navController.navigate(SearchDestination.route) },
-                    navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                    navigateToEditTodo =  { todoId -> navController.navigate("${TodoEditDestination.route}/$todoId") }
-                )
-            }
-            composable(route = AddTodoDestination.route) {
-                AddTodoScreen(
-                    navigateTohome = { navController.popBackStack()},
+                    userID = userId,
+                    navigateToAddTodo = { navController.navigate("${AddTodoDestination.route}/$userId") },
+                    navigateTohome = { navController.navigate("${HomeDestination.route}/$userId") },
+                    navigateToSearchTodo = { navController.navigate("${SearchDestination.route}/$userId") },
+                    navigateToProfile = { navController.navigate("${ProfileDestination.route}/$userId") },
+                    navigateToEditTodo = { todoId -> navController.navigate("${TodoEditDestination.route}/$todoId") }
                 )
             }
             composable(
-                route = "${TodoEditDestination.route}/{${
-                    TodoEditDestination.todoIdArg}}",
+                route = "${AddTodoDestination.route}/{userId}",
+                arguments = listOf(navArgument("userId") { type = NavType.IntType }))
+            {
+                backStackEntry ->
+                val userId = backStackEntry.arguments?.getInt("userId") ?: throw IllegalArgumentException("userId not found in arguments")
+                AddTodoScreen(
+                    userID = userId,
+                    navigateTohome = { navController.popBackStack() },
+                )
+            }
+            composable(
+                route = "${TodoEditDestination.route}/{${TodoEditDestination.todoIdArg}}",
                 arguments = listOf(navArgument(TodoEditDestination.todoIdArg) { type = NavType.IntType })
             ) { backStackEntry ->
                 val itemId = backStackEntry.arguments?.getInt(TodoEditDestination.todoIdArg)
@@ -89,21 +99,32 @@ fun AppNavigation() {
                     navigateBack = { navController.popBackStack() },
                 )
             }
-            composable(route = SearchDestination.route) {
+            composable(
+                route = "${SearchDestination.route}/{userId}",
+                arguments = listOf(navArgument("userId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val userId = backStackEntry.arguments?.getInt("userId") ?: throw IllegalArgumentException("userId not found in arguments")
                 SearchScreen(
-                    navigateToHome = { navController.navigate(HomeDestination.route) },
-                    navigateToSearchTodo = { navController.navigate(SearchDestination.route) },
-                    navigateToProfile = { navController.navigate(ProfileDestination.route) },
-                    navigateToEditTodo =  { todoId -> navController.navigate("${TodoEditDestination.route}/$todoId") }
+                    userID = userId,
+                    navigateToHome = { navController.navigate("${HomeDestination.route}/$userId") },
+                    navigateToSearchTodo = { navController.navigate("${SearchDestination.route}/$userId") },
+                    navigateToProfile = { navController.navigate("${ProfileDestination.route}/$userId") },
+                    navigateToEditTodo = { todoId -> navController.navigate("${TodoEditDestination.route}/$todoId") }
                 )
             }
-            composable(route = ProfileDestination.route) {
+            composable(
+                route = "${ProfileDestination.route}/{userId}",
+                arguments = listOf(navArgument("userId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val userId = backStackEntry.arguments?.getInt("userId") ?: throw IllegalArgumentException("userId not found in arguments")
                 ProfileScreen(
+                    userID = userId,
                     navigateToLogIn = { navController.navigate(LoginDestination.route) },
-                    navigateToHome = {navController.navigate(HomeDestination.route)},
-                    navigateToSearch = {navController.navigate(SearchDestination.route)}
+                    navigateToHome = { navController.navigate("${HomeDestination.route}/$userId") },
+                    navigateToSearch = { navController.navigate("${SearchDestination.route}/$userId") }
                 )
             }
         }
     }
 }
+
