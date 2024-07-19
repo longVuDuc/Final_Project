@@ -87,7 +87,9 @@ fun SignIn(navigateToLogIn: () -> Unit,
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Button(onClick = { vModel.add() }, enabled = isFieldsNotEmpty) {
+        Button(onClick = {
+            vModel.add()
+            navigateToLogIn() }, enabled = isFieldsNotEmpty) {
             Text(text = "Sign Up")
         }
         ClickableText(text = AnnotatedString("Already have an account? Login here"),

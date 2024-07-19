@@ -7,15 +7,12 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [TodoItem::class, User::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun todoDao(): TodoDAO
-
     abstract fun userDao(): UserDAO
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
-
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -23,7 +20,6 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .fallbackToDestructiveMigration() // Use only during development, otherwise implement migrations properly
                     .build()
                 INSTANCE = instance
                 instance
